@@ -1,6 +1,7 @@
 package com.example.myapp.fragments
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
@@ -14,13 +15,15 @@ import com.example.myapp.R
 import com.example.myapp.adapter.NewsAdapter
 import com.example.myapp.db.ArticleDatabase
 import com.example.myapp.repository.NewsRepository
+import com.example.myapp.ui.WebViewActivity
 import com.example.myapp.util.Constans.Companion.QUERY_PAGE_SIZE
+import com.example.myapp.util.ItemClickListener
 import com.example.myapp.util.Resource
 import com.example.myapp.viewmodel.NewsViewModel
 import com.example.myapp.viewmodel.NewsViewModelProviderFactory
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home) , ItemClickListener{
 
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
@@ -110,11 +113,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(requireContext())
+        newsAdapter = NewsAdapter(this)
         rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@HomeFragment.scrollListener)
         }
+    }
+
+    override fun onArticleClick(url: String) {
+        val intent = Intent(context, WebViewActivity::class.java)
+        intent.putExtra("url", url)
+        startActivity(intent)
     }
 }

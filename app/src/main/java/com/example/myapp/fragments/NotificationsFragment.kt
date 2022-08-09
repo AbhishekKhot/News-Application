@@ -1,6 +1,7 @@
 package com.example.myapp.fragments
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.provider.SyncStateContract
 import android.util.Log
@@ -17,8 +18,10 @@ import com.example.myapp.R
 import com.example.myapp.adapter.NewsAdapter
 import com.example.myapp.db.ArticleDatabase
 import com.example.myapp.repository.NewsRepository
+import com.example.myapp.ui.WebViewActivity
 import com.example.myapp.util.Constans.Companion.QUERY_PAGE_SIZE
 import com.example.myapp.util.Constans.Companion.SEARCH_NEWS_TIME_DELAY
+import com.example.myapp.util.ItemClickListener
 import com.example.myapp.util.Resource
 import com.example.myapp.viewmodel.NewsViewModel
 import com.example.myapp.viewmodel.NewsViewModelProviderFactory
@@ -30,7 +33,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NotificationsFragment : Fragment(R.layout.fragment_notifications) {
+class NotificationsFragment : Fragment(R.layout.fragment_notifications), ItemClickListener {
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
 
@@ -131,12 +134,18 @@ class NotificationsFragment : Fragment(R.layout.fragment_notifications) {
 
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(requireContext())
+        newsAdapter = NewsAdapter(this)
         rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@NotificationsFragment.scrollListener)
         }
+    }
+
+    override fun onArticleClick(url: String) {
+        val intent = Intent(context, WebViewActivity::class.java)
+        intent.putExtra("url", url)
+        startActivity(intent)
     }
 
 }

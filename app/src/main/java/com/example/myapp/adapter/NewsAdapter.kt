@@ -1,7 +1,5 @@
 package com.example.myapp.adapter
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapp.R
 import com.example.myapp.model.Article
-import com.example.myapp.ui.WebViewActivity
+import com.example.myapp.util.ItemClickListener
 import kotlinx.android.synthetic.main.item_article_preview.view.*
 
-class NewsAdapter(private val context: Context): RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(val itemClickListener: ItemClickListener): RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
@@ -55,9 +53,7 @@ class NewsAdapter(private val context: Context): RecyclerView.Adapter<NewsAdapte
         }
 
         holder.itemView.ivArticleImage.setOnClickListener {
-            val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra("url", differ.currentList[position].url)
-            context.startActivity(intent)
+            itemClickListener.onArticleClick(differ.currentList[position].url.toString())
         }
     }
 }
